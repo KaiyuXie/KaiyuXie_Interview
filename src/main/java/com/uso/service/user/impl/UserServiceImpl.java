@@ -2,6 +2,7 @@ package com.uso.service.user.impl;
 
 import javax.annotation.Resource;
 
+import org.apache.log4j.Logger;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -16,12 +17,15 @@ import com.uso.service.user.IUserService;
  */
 @Service("userServiceImpl")
 public class UserServiceImpl implements IUserService{
-
+	
+	private static final Logger logger = Logger.getLogger(UserServiceImpl.class);
+	
 	@Resource
 	private IUserDAO userDAO;
 	
 	@Transactional
 	public int saveUser(UserParams userParams) {
+		logger.info(userParams);
 		return userDAO.saveUser(userParams);
 	}
 }

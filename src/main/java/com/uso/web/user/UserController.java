@@ -5,6 +5,7 @@ import java.util.Map;
 
 import javax.annotation.Resource;
 
+import org.apache.log4j.Logger;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -17,6 +18,8 @@ import com.uso.service.user.IUserService;
 @Controller
 @RequestMapping(value = "/user")
 public class UserController {
+	
+	private static final Logger logger = Logger.getLogger(UserController.class);
 	
 	@Resource
 	private IUserService service;
@@ -42,6 +45,7 @@ public class UserController {
 				ret.setMsg("插入成功");
 			}
 		}catch(Exception e){
+			logger.error("username=" + username + e);
 			ret.setCode(-1);
 			ret.setMsg("插入失败");
 		}
