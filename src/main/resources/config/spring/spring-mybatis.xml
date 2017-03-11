@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:tx="http://www.springframework.org/schema/tx" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:p="http://www.springframework.org/schema/p"
+	xsi:schemaLocation="http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-4.0.xsd
+	http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.0.xsd">
+
+	<bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource">
+		<property name="driverClassName" value="${datasource.druid.driverClassName}"></property>
+		<property name="url" value="${datasource.druid.url}"></property>
+		<property name="username" value="${datasource.druid.username}"></property>
+		<property name="password" value="${datasource.druid.password}"></property>
+		<property name="maxActive" value="${datasource.druid.maxActive}"></property>
+		<property name="minIdle" value="${datasource.druid.minIdle}"></property>
+		<property name="maxIdle" value="${datasource.druid.maxIdle}"></property>
+		<property name="maxWait" value="${datasource.druid.maxWait}"></property>
+		<property name="defaultAutoCommit" value="true"></property>
+		<property name="validationQuery" value="SELECT 1 from dual" />
+		<property name="testOnBorrow" value="${datasource.druid.testOnBorrow}" />
+		<property name="testWhileIdle" value="${datasource.druid.testWhileIdle}" />
+		<property name="removeAbandoned" value="true" /><!--removeAbandoned: 
+			是否自动回收超时连接 -->
+		<property name="logAbandoned" value="true" /><!-- 连接被泄露时是否打印 -->
+		<property name="removeAbandonedTimeout" value="60" /> <!--removeAbandonedTimeout: 超时时间(以秒数为单位) -->
+		<property name="timeBetweenEvictionRunsMillis" value="30000" /><!-- 
+			每10秒运行一次空闲连接回收器. -->
+		<property name="numTestsPerEvictionRun" value="5" /><!-- 在每次空闲连接回收器线程(如果有)运行时检查的连接数量 -->
+		<property name="minEvictableIdleTimeMillis" value="1800000" /><!-- 
+			池中的连接空闲30分钟后被回收 -->
+		<property name="poolPreparedStatements" value="true" /><!--开启PreparedStatements -->
+	</bean>
+
+	<bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+		<property name="dataSource" ref="dataSource" />
+		<property name="configLocation" value="classpath:sqlMapConfig.xml" />
+		<!-- 自动扫描mapping.xml文件，**表示迭代查找,也可在sqlMapConfig.xml中单独指定xml文件 -->
+		<property name="mapperLocations" value="classpath:com/hua/saf/**/*.xml" />
+	</bean>
+
+	<bean id="sqlSessionTemplate" class="org.mybatis.spring.SqlSessionTemplate">
+		<constructor-arg index="0" ref="sqlSessionFactory"></constructor-arg>
+	</bean>
+
+	<bean id="transactionManager"
+		class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+		<property name="dataSource" ref="dataSource" />
+	</bean>
+</beans>
